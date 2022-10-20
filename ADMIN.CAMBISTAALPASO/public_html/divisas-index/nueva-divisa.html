@@ -1,0 +1,145 @@
+<div id="nuevaDivisa" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h5 style="color:#008B8B" class="modal-title" id="exampleModalLabel">Nueva Divisa</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+  
+        <form class="row g-3 needs-validation" novalidate>
+    
+      <div class="modal-body">
+        
+  
+          <input type="hidden" name="ID" id="ID">
+        <div class="row">
+              <div class="col-12">
+              <label style="color:#008B8B" for="txtCodigoDivisa" class="form-label">Codigo de Divisa</label>
+              <input type="text" class="form-control" id="txtCodigoDivisa" maxlength="3" 
+              placeholder="Ingrese codigo de divisa" required>
+
+              <div class="invalid-feedback">
+                Ingrese codigo de divisa
+                </div>
+            </div>
+            <div class="col-12">
+              <label style="color:#008B8B;" for="txtNombreDivisa" class="form-label">Nombre Divisa</label>
+              <input type="text" class="form-control" id="txtNombreDivisa"  placeholder="Ingrese el nombre" required>
+
+              <div class="invalid-feedback">
+                Ingrese nombre de divisa
+                </div>
+            </div>
+            
+                    
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button class="btn btn-success" type="submit">Guardar</button>
+      </div>
+    </form>
+
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+
+
+(function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  console.log(forms);
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+
+      console.log(form);
+
+      form.addEventListener('submit', function (event) {
+
+        console.log("validacion");
+
+        if (form.checkValidity()) {
+          
+          guardarDivisa();
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})();
+
+
+
+
+  
+ function guardarDivisa()
+ {
+
+  var ID=$("#ID").val();
+
+  if(ID)
+  {
+    $.ajax(
+      {
+        type:"put",
+        url:"http://cambistaalpaso.com/api/v1/divisas/"+ID,
+        data: {
+              CodigoDivisa:$("#txtCodigoDivisa").val(),
+              NombreDivisa:$("#txtNombreDivisa").val(),
+              },
+        success:function(response)
+            {
+            
+
+              window.FlashMessage.success('La divisa se guardo correctamente');
+
+                $('#nuevaDivisa').modal("hide");
+
+
+                recargarData();
+            }
+      }
+    );
+  }
+  else
+  {
+
+    $.ajax(
+      {
+        type:"post",
+        url:"http://cambistaalpaso.com/api/v1/divisas",
+        data: {
+              CodigoDivisa:$("#txtCodigoDivisa").val(),
+              NombreDivisa:$("#txtNombreDivisa").val(),
+              
+              },
+        success:function(response)
+            {
+            
+                window.FlashMessage.success('La divisa se guardo correctamente');
+
+
+                $('#nuevaDivisa').modal("hide");
+
+                recargarData();
+
+
+            }
+      }
+    );
+  } 
+
+ }
+
+
+</script>

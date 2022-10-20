@@ -1,0 +1,206 @@
+<div id="nuevoCliente" class="modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      
+      <div class="modal-header">
+        <h5 style="color:#008B8B" class="modal-title" id="exampleModalLabel">Nuevo Cliente</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+  
+        <form class="row g-3 needs-validation" novalidate>
+    
+      <div class="modal-body">
+        
+  
+          <input type="hidden" name="ID" id="ID">
+        <div class="row">
+            <div class="col-12">
+              <label style="color:#008B8B" for="txtTipoDocumento" class="form-label">Tipo de Documento</label>
+              <select class="form-select"  id="txtTipoDocumento" required>
+              <option selected disabled value="">Seleccione Tipo de Documento</option>
+              <option>DNI</option><option>PASAPORTE
+              </select>
+              <div class="invalid-feedback">
+              Por favor seleccione el tipo de documento.
+              </div>
+              <div class="valid-feedback">
+                ok
+              </div>
+            </div>
+            <div class="col-12">
+              <label style="color:#008B8B" for="txtNumeroDocumento" class="form-label">Numero de Documento</label>
+              <input type="text" class="form-control" id="txtNumeroDocumento" maxlength="12" placeholder="Ingrese numero de documento" required>
+
+              <div class="invalid-feedback">
+                Ingrese el numero de documento
+                </div>
+            </div>
+            <div class="col-6">
+              <label style="color:#008B8B;" for="txtNombres" class="form-label">Nombres</label>
+              <input style="text-transform:uppercase" type="text" class="form-control" id="txtNombres"  placeholder="Ingrese el nombre" required>
+
+              <div class="invalid-feedback">
+                Ingrese el nombre
+                </div>
+            </div>
+            <div class="col-6">
+              <label style="color:#008B8B" for="txtApellidos" class="form-label">Apellidos</label>
+              <input style="text-transform:uppercase" type="text" class="form-control" id="txtApellidos" placeholder="Ingrese el apellido" required>
+
+              <div class="invalid-feedback">
+                Ingrese el apellido
+                </div>
+            </div>
+            <div class="col-12">
+             <div>
+             <label style="color:#008B8B" for="txtFechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+              <input type="date" class="form-control" id="txtFechaNacimiento" min="1922-01-01" required>
+              <div class="invalid-feedback">
+              Ingrese la fecha
+                </div>
+            </div>
+            <div class="col-12">
+              <label style="color:#008B8B" for="txtLugarDeVivienda" class="form-label">Lugar de Vivienda</label>
+              <input style="text-transform:uppercase" type="text" class="form-control" id="txtLugarDeVivienda" placeholder="Ingrese dirección" required>
+
+              <div class="invalid-feedback">
+                Ingrese la dirección
+                </div>
+            </div>
+            <div class="col-6">
+              <label style="color:#008B8B" for="txtPais" class="form-label">Pais</label>
+              <select class="form-select" id="txtPais" required>
+              <option selected disabled value="">Seleccione el pais</option>
+              <option>PERU</option><option>CHILE</option><option>BRASIL</option><option>VENEZUELA</option><option>EEUU</option><option>CANADA</option><option>ESPAÑA</option><option>INGLATERRA</option>
+              </select>
+              <div class="invalid-feedback">
+              Por favor seleccione el Pais.
+              </div>
+  
+        
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button class="btn btn-success" type="submit">Guardar</button>
+      </div>
+    </form>
+
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+
+
+(function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  console.log(forms);
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+
+      console.log(form);
+
+      form.addEventListener('submit', function (event) {
+
+        console.log("validacion");
+
+        if (form.checkValidity()) {
+          
+          guardarCliente();
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})();
+
+
+
+
+  
+ function guardarCliente()
+ {
+
+  var ID=$("#ID").val();
+
+  if(ID)
+  {
+    $.ajax(
+      {
+        type:"put",
+        url:"http://cambistaalpaso.com/api/v1/clientes/"+ID,
+        data: {
+              TipoDocumento:$("#txtTipoDocumento").val(),
+              NumeroDocumento:$("#txtNumeroDocumento").val(),
+              Nombres:$("#txtNombres").val(),
+              Apellidos:$("#txtApellidos").val(),
+              FechaNacimiento:$("#txtFechaNacimiento").val(),
+              LugarDeVivienda:$("#txtLugarDeVivienda").val(),
+              Pais:$("#txtPais").val()
+              },
+        success:function(response)
+            {
+            
+
+              window.FlashMessage.success('El cliente se guardo correctamente');
+
+                $('#nuevoCliente').modal("hide");
+
+
+                recargarData();
+
+
+            }
+      }
+    );
+
+  }
+  else
+  {
+
+    $.ajax(
+      {
+        type:"post",
+        url:"http://cambistaalpaso.com/api/v1/clientes",
+        data: {
+              TipoDocumento:$("#txtTipoDocumento").val(),
+              NumeroDocumento:$("#txtNumeroDocumento").val(),
+              Nombres:$("#txtNombres").val(),
+              Apellidos:$("#txtApellidos").val(),
+              FechaNacimiento:$("#txtFechaNacimiento").val(),
+              LugarDeVivienda:$("#txtLugarDeVivienda").val(),
+              Pais:$("#txtPais").val()
+              },
+        success:function(response)
+            {
+            
+                window.FlashMessage.success('El cliente se guardo correctamente');
+
+
+                $('#nuevoCliente').modal("hide");
+
+                recargarData();
+
+
+            }
+      }
+    );
+
+  } 
+
+  
+
+
+ }
+
+
+</script>
